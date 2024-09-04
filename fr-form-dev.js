@@ -9,12 +9,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function showForetagTab() {
         tabContentForetag.style.display = 'block';
         tabContentPrivat.style.display = 'none';
+        console.log("företag")
     }
 
     // Funktion för att visa Privat-tabben och dölja Företag-tabben
     function showPrivatTab() {
         tabContentForetag.style.display = 'none';
         tabContentPrivat.style.display = 'block';
+        console.log("privat")
     }
 
     // Lägg till click-lyssnare för varje knapp
