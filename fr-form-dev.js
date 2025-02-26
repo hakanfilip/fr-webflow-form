@@ -169,77 +169,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     hideAllFieldsPrivat(); // Dölj alla privatfält vid sidladdning
 
-    // -----------------------------------------
-    // Hantering av required för meddelandefält (direkt på ID)
-    // -----------------------------------------
-    
-    // Företagsformulär
-    const fCheckbox = document.getElementById('f-pris-reserv');
-    const fMessageField = document.getElementById('f-meddelande');
-    
-    console.log("Företagsformulär element:", {
-        checkbox: fCheckbox,
-        messageField: fMessageField
-    });
-    
-    if (fCheckbox && fMessageField) {
-        function updateFMessageRequired() {
-            console.log("Företag checkbox ändrad. Checked:", fCheckbox.checked);
-            if (fCheckbox.checked) {
-                fMessageField.setAttribute('required', '');
-                console.log("f-meddelande är nu required:", fMessageField.hasAttribute('required'));
-            } else {
-                fMessageField.removeAttribute('required');
-                console.log("f-meddelande är inte längre required:", fMessageField.hasAttribute('required'));
-            }
-        }
-        
-        // Kör funktionen vid start
-        updateFMessageRequired();
-        
-        // Lägg till event listener
-        fCheckbox.addEventListener('change', updateFMessageRequired);
-        console.log("Event listener tillagd på företag checkbox");
-    } else {
-        console.error("Kunde inte hitta företagsformulär element:", {
-            checkbox: fCheckbox ? "Hittad" : "Saknas",
-            messageField: fMessageField ? "Hittad" : "Saknas"
-        });
-    }
-    
-    // Privatformulär
-    const pCheckbox = document.getElementById('p-pris-reserv');
-    const pMessageField = document.getElementById('p-meddelande');
-    
-    console.log("Privatformulär element:", {
-        checkbox: pCheckbox,
-        messageField: pMessageField
-    });
-    
-    if (pCheckbox && pMessageField) {
-        function updatePMessageRequired() {
-            console.log("Privat checkbox ändrad. Checked:", pCheckbox.checked);
-            if (pCheckbox.checked) {
-                pMessageField.setAttribute('required', '');
-                console.log("p-meddelande är nu required:", pMessageField.hasAttribute('required'));
-            } else {
-                pMessageField.removeAttribute('required');
-                console.log("p-meddelande är inte längre required:", pMessageField.hasAttribute('required'));
-            }
-        }
-        
-        // Kör funktionen vid start
-        updatePMessageRequired();
-        
-        // Lägg till event listener
-        pCheckbox.addEventListener('change', updatePMessageRequired);
-        console.log("Event listener tillagd på privat checkbox");
-    } else {
-        console.error("Kunde inte hitta privatformulär element:", {
-            checkbox: pCheckbox ? "Hittad" : "Saknas",
-            messageField: pMessageField ? "Hittad" : "Saknas"
-        });
-    }
+
+
 });
 
 document.addEventListener('DOMContentLoaded', function() {
