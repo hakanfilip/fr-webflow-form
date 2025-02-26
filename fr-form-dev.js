@@ -169,8 +169,51 @@ document.addEventListener('DOMContentLoaded', function() {
 
     hideAllFieldsPrivat(); // Dölj alla privatfält vid sidladdning
 
+    // -----------------------------------------
+    // Hantering av required för meddelandefält (Företag)
+    // -----------------------------------------
+    const fCheckbox = document.querySelector('[data-requires-field="f-meddelande"]');
+    const fMessageField = document.getElementById('f-meddelande');
+    
+    if (fCheckbox && fMessageField) {
+        // Funktion för att uppdatera required-attribut för företagsformulär
+        function updateFMessageRequired() {
+            if (fCheckbox.checked) {
+                fMessageField.setAttribute('required', '');
+            } else {
+                fMessageField.removeAttribute('required');
+            }
+        }
+        
+        // Kör funktionen vid sidladdning
+        updateFMessageRequired();
+        
+        // Lägg till event listener
+        fCheckbox.addEventListener('change', updateFMessageRequired);
+    }
 
-
+    // -----------------------------------------
+    // Hantering av required för meddelandefält (Privat)
+    // -----------------------------------------
+    const pCheckbox = document.querySelector('[data-requires-field="p-meddelande"]');
+    const pMessageField = document.getElementById('p-meddelande');
+    
+    if (pCheckbox && pMessageField) {
+        // Funktion för att uppdatera required-attribut för privatformulär
+        function updatePMessageRequired() {
+            if (pCheckbox.checked) {
+                pMessageField.setAttribute('required', '');
+            } else {
+                pMessageField.removeAttribute('required');
+            }
+        }
+        
+        // Kör funktionen vid sidladdning
+        updatePMessageRequired();
+        
+        // Lägg till event listener
+        pCheckbox.addEventListener('change', updatePMessageRequired);
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function() {
