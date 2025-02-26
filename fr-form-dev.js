@@ -170,124 +170,75 @@ document.addEventListener('DOMContentLoaded', function() {
     hideAllFieldsPrivat(); // Dölj alla privatfält vid sidladdning
 
     // -----------------------------------------
-    // Försöka hitta kryssrutor och meddelandefält med enklare metod
+    // Hantering av required för meddelandefält (direkt på ID)
     // -----------------------------------------
-    console.log("Söker efter checkbox och meddelandefält...");
     
-    // Logga alla checkboxes på sidan för felsökning
-    const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
-    console.log(`Hittade ${allCheckboxes.length} checkboxes på sidan`);
-    allCheckboxes.forEach((checkbox, index) => {
-        console.log(`Checkbox ${index}:`, {
-            id: checkbox.id,
-            name: checkbox.name,
-            class: checkbox.className,
-            dataAttributes: Array.from(checkbox.attributes)
-                .filter(attr => attr.name.startsWith('data-'))
-                .map(attr => `${attr.name}="${attr.value}"`)
-                .join(', ')
-        });
-    });
-    
-    // Logga alla textareas på sidan för felsökning
-    const allTextareas = document.querySelectorAll('textarea');
-    console.log(`Hittade ${allTextareas.length} textarea-element på sidan`);
-    allTextareas.forEach((textarea, index) => {
-        console.log(`Textarea ${index}:`, {
-            id: textarea.id,
-            name: textarea.name,
-            class: textarea.className,
-            placeholder: textarea.placeholder
-        });
-    });
-    
-    // Hitta meddelandefälten
+    // Företagsformulär
+    const fCheckbox = document.getElementById('f-pris-reserv');
     const fMessageField = document.getElementById('f-meddelande');
-    const pMessageField = document.getElementById('p-meddelande');
     
-    console.log("f-meddelande element:", fMessageField);
-    console.log("p-meddelande element:", pMessageField);
+    console.log("Företagsformulär element:", {
+        checkbox: fCheckbox,
+        messageField: fMessageField
+    });
     
-    // För att säkerställa att vi hittar specifika kryssrutor som kan vara relaterade till meddelandefält
-    // kan vi leta efter kryssrutor i närheten av meddelandefälten
-    
-    function findRelatedCheckbox(messageField) {
-        if (!messageField) return null;
-        
-        // Prova att gå upp i DOM-trädet och leta efter en kryssruta i samma container
-        let currentElement = messageField.parentElement;
-        let checkbox = null;
-        let searchDepth = 0;
-        const maxDepth = 5; // För att undvika att söka för djupt
-        
-        while (currentElement && !checkbox && searchDepth < maxDepth) {
-            checkbox = currentElement.querySelector('input[type="checkbox"]');
-            if (!checkbox) {
-                currentElement = currentElement.parentElement;
-                searchDepth++;
-            }
-        }
-        
-        console.log(`Hittade ${checkbox ? 'en' : 'ingen'} kryssruta i närheten av meddelandefältet efter ${searchDepth} nivåer`);
-        
-        if (checkbox) {
-            console.log("Relaterad kryssruta:", {
-                id: checkbox.id,
-                name: checkbox.name,
-                class: checkbox.className,
-                dataAttributes: Array.from(checkbox.attributes)
-                    .filter(attr => attr.name.startsWith('data-'))
-                    .map(attr => `${attr.name}="${attr.value}"`)
-                    .join(', ')
-            });
-        }
-        
-        return checkbox;
-    }
-    
-    // Hitta relaterade kryssrutor
-    const fCheckbox = findRelatedCheckbox(fMessageField);
-    const pCheckbox = findRelatedCheckbox(pMessageField);
-    
-    // Sätt upp event listeners om vi hittar både kryssruta och meddelandefält
-    if (fMessageField && fCheckbox) {
-        console.log("Sätter upp required-hantering för företagsformuläret");
-        
+    if (fCheckbox && fMessageField) {
         function updateFMessageRequired() {
+            console.log("Företag checkbox ändrad. Checked:", fCheckbox.checked);
             if (fCheckbox.checked) {
                 fMessageField.setAttribute('required', '');
-                console.log("f-meddelande är nu required");
+                console.log("f-meddelande är nu required:", fMessageField.hasAttribute('required'));
             } else {
                 fMessageField.removeAttribute('required');
-                console.log("f-meddelande är inte längre required");
+                console.log("f-meddelande är inte längre required:", fMessageField.hasAttribute('required'));
             }
         }
         
-        fCheckbox.addEventListener('change', updateFMessageRequired);
-        // Kör funktionen en gång för att sätta initialt tillstånd
+        // Kör funktionen vid start
         updateFMessageRequired();
+        
+        // Lägg till event listener
+        fCheckbox.addEventListener('change', updateFMessageRequired);
+        console.log("Event listener tillagd på företag checkbox");
     } else {
-        console.error("Kunde inte hitta både kryssruta och meddelandefält för företagsformuläret");
+        console.error("Kunde inte hitta företagsformulär element:", {
+            checkbox: fCheckbox ? "Hittad" : "Saknas",
+            messageField: fMessageField ? "Hittad" : "Saknas"
+        });
     }
     
-    if (pMessageField && pCheckbox) {
-        console.log("Sätter upp required-hantering för privatformuläret");
-        
+    // Privatformulär
+    const pCheckbox = document.getElementById('p-pris-reserv');
+    const pMessageField = document.getElementById('p-meddelande');
+    
+    console.log("Privatformulär element:", {
+        checkbox: pCheckbox,
+        messageField: pMessageField
+    });
+    
+    if (pCheckbox && pMessageField) {
         function updatePMessageRequired() {
+            console.log("Privat checkbox ändrad. Checked:", pCheckbox.checked);
             if (pCheckbox.checked) {
                 pMessageField.setAttribute('required', '');
-                console.log("p-meddelande är nu required");
+                console.log("p-meddelande är nu required:", pMessageField.hasAttribute('required'));
             } else {
                 pMessageField.removeAttribute('required');
-                console.log("p-meddelande är inte längre required");
+                console.log("p-meddelande är inte längre required:", pMessageField.hasAttribute('required'));
             }
         }
         
-        pCheckbox.addEventListener('change', updatePMessageRequired);
-        // Kör funktionen en gång för att sätta initialt tillstånd
+        // Kör funktionen vid start
         updatePMessageRequired();
+        
+        // Lägg till event listener
+        pCheckbox.addEventListener('change', updatePMessageRequired);
+        console.log("Event listener tillagd på privat checkbox");
     } else {
-        console.error("Kunde inte hitta både kryssruta och meddelandefält för privatformuläret");
+        console.error("Kunde inte hitta privatformulär element:", {
+            checkbox: pCheckbox ? "Hittad" : "Saknas",
+            messageField: pMessageField ? "Hittad" : "Saknas"
+        });
     }
 });
 
