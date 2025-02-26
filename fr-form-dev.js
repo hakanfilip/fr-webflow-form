@@ -172,16 +172,60 @@ document.addEventListener('DOMContentLoaded', function() {
     // -----------------------------------------
     // Hantering av required för meddelandefält (Företag)
     // -----------------------------------------
-    const fCheckbox = document.querySelector('[data-requires-field="f-meddelande"]');
+    console.log("Börjar initialisera required-hantering för företagsformulär...");
+    
+    // Testa flera olika selektorer för att hitta kryssrutan
+    let fCheckbox = document.querySelector('[data-requires-field="f-meddelande"]');
+    console.log("Söker efter kryssruta med data-requires-field=f-meddelande:", fCheckbox);
+    
+    if (!fCheckbox) {
+        fCheckbox = document.querySelector('input[type="checkbox"][data-requires-field="f-meddelande"]');
+        console.log("Söker mer specifikt efter checkbox med data-requires-field=f-meddelande:", fCheckbox);
+    }
+    
+    if (!fCheckbox) {
+        const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+        console.log("Alla kryssrutor på sidan:", allCheckboxes.length);
+        allCheckboxes.forEach((cb, index) => {
+            console.log(`Kryssruta ${index}:`, cb.id, cb.name, cb.getAttribute('data-requires-field'));
+        });
+        
+        // Försök hitta kryssrutan baserat på id eller namn som kanske innehåller texten "meddelande"
+        fCheckbox = document.querySelector('input[type="checkbox"][id*="meddelande"], input[type="checkbox"][name*="meddelande"]');
+        console.log("Söker efter checkbox med 'meddelande' i id eller name:", fCheckbox);
+    }
+    
     const fMessageField = document.getElementById('f-meddelande');
+    console.log("Meddelandefält f-meddelande:", fMessageField);
+    
+    if (fMessageField) {
+        console.log("Meddelandefält attribut:", {
+            id: fMessageField.id,
+            required: fMessageField.hasAttribute('required'),
+            type: fMessageField.type,
+            display: window.getComputedStyle(fMessageField).display
+        });
+    }
     
     if (fCheckbox && fMessageField) {
+        console.log("Båda elementen hittades. Sätter upp event listener.");
+        
         // Funktion för att uppdatera required-attribut för företagsformulär
         function updateFMessageRequired() {
+            console.log("Kryssruta ändrad. Checked:", fCheckbox.checked);
+            
             if (fCheckbox.checked) {
                 fMessageField.setAttribute('required', '');
+                console.log("Sätter required-attribut på f-meddelande");
+                
+                // Verifiera att attributet sattes
+                console.log("f-meddelande har nu required:", fMessageField.hasAttribute('required'));
             } else {
                 fMessageField.removeAttribute('required');
+                console.log("Tar bort required-attribut från f-meddelande");
+                
+                // Verifiera att attributet togs bort
+                console.log("f-meddelande har nu required:", fMessageField.hasAttribute('required'));
             }
         }
         
@@ -189,74 +233,3 @@ document.addEventListener('DOMContentLoaded', function() {
         updateFMessageRequired();
         
         // Lägg till event listener
-        fCheckbox.addEventListener('change', updateFMessageRequired);
-    }
-
-    // -----------------------------------------
-    // Hantering av required för meddelandefält (Privat)
-    // -----------------------------------------
-    const pCheckbox = document.querySelector('[data-requires-field="p-meddelande"]');
-    const pMessageField = document.getElementById('p-meddelande');
-    
-    if (pCheckbox && pMessageField) {
-        // Funktion för att uppdatera required-attribut för privatformulär
-        function updatePMessageRequired() {
-            if (pCheckbox.checked) {
-                pMessageField.setAttribute('required', '');
-            } else {
-                pMessageField.removeAttribute('required');
-            }
-        }
-        
-        // Kör funktionen vid sidladdning
-        updatePMessageRequired();
-        
-        // Lägg till event listener
-        pCheckbox.addEventListener('change', updatePMessageRequired);
-    }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Fält för Företagsformuläret som vi vill spara
-    const företagFields = ['f-offert-epost', 'f-namn', 'f-fornamn', 'f-efternamn', 'f-epost', 'f-tele'];
-
-    // Fält för Privatformuläret som vi vill spara
-    const privatFields = ['p-personnummer', 'p-fornamn', 'p-efternamn', 'p-epost', 'p-tele', 'p-adress', 'p-postnummer', 'p-ort'];
-
-    // Spara data i localStorage
-    function saveFormData(fields) {
-        fields.forEach(function(fieldId) {
-            const field = document.getElementById(fieldId);
-            if (field) {
-                console.log(`Saving data for: ${fieldId}`); // Loggar fält som sparas
-                field.addEventListener('input', function() {
-                    localStorage.setItem(fieldId, field.value);
-                    console.log(`${fieldId} saved:`, field.value); // Loggar sparat värde
-                });
-            } else {
-                console.error(`Field not found: ${fieldId}`); // Loggar om ett fält inte hittas
-            }
-        });
-    }
-
-    // Fyll i sparad data vid laddning
-    function fillFormData(fields) {
-        fields.forEach(function(fieldId) {
-            const field = document.getElementById(fieldId);
-            if (field && localStorage.getItem(fieldId)) {
-                field.value = localStorage.getItem(fieldId);
-                console.log(`Filling data for: ${fieldId} with value:`, field.value); // Loggar att fält fylls i
-            } else {
-                console.error(`Field not found or no saved data for: ${fieldId}`); // Loggar om inget värde hittas
-            }
-        });
-    }
-
-    // Fyll i sparade data vid sidladdning
-    fillFormData(företagFields);  // För Företag
-    fillFormData(privatFields);   // För Privat
-
-    // Spara data när fält ändras
-    saveFormData(företagFields);  // För Företag
-    saveFormData(privatFields);   // För Privat
-});
